@@ -1,6 +1,6 @@
 [project]
 name = "tgcs-utils"
-version = "0.1.0"
+version = "0.1.1"
 description = "Python CLI utilities for David's Trail Guide System."
 readme = "README.md"
 requires-python = ">=3.13"
