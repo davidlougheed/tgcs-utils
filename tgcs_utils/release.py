@@ -1,4 +1,5 @@
 import os
+import pathlib
 import requests
 import sys
 
@@ -11,12 +12,9 @@ from dataclasses import dataclass
 class TGCSRelease:
     do_release: bool = False
     version: str = "latest"
+    bundle_path: pathlib.Path = pathlib.Path("bundle.zip")
 
     def __call__(self):
-        bundle_path = "bundle.zip"
-
-        # ----–----–----–----–----–----–----–----–----–----–----–----–----–----–----–----–----–----–----–----–----–-----
-
         api_url = os.environ["TGCS_SERVER"].rstrip("/")
 
         tgcs_token = requests.post(
@@ -83,5 +81,5 @@ class TGCSRelease:
             bundle = requests.get(
                 f"{api_url}/api/v1/releases/{version}/bundle", headers=tgcs_headers
             )
-            with open(bundle_path, "wb") as fh:
+            with open(self.bundle_path, "wb") as fh:
                 fh.write(bundle.content)
