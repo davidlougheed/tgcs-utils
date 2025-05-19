@@ -1,7 +1,6 @@
 import json
 import pathlib
 import os
-import sys
 
 from cappa import command
 from dataclasses import dataclass
@@ -12,6 +11,7 @@ from dataclasses import dataclass
 class TGCSCreateBuildEnv:
     bundle_metadata: pathlib.Path
     eas_json: pathlib.Path
+    build_env: pathlib.Path | None = None
 
     def __call__(self):
         direct_export_keys = (
@@ -40,19 +40,19 @@ class TGCSCreateBuildEnv:
         with open(self.eas_json, "r") as ef:
             eas_data = json.load(ef)
 
-        build_env = {}
-        if len(sys.argv) == 2:
-            with open(sys.argv[-1], "r") as fh:
+        build_env_dict = {}
+        if self.build_env is not None:
+            with open(self.build_env, "r") as fh:
                 for line in map(str.strip, fh.readlines()):
                     k, v = line.split("=")
-                    build_env[k] = v
+                    build_env_dict[k] = v
         else:
-            build_env = os.environ  # l o l
+            build_env_dict = os.environ  # l o l
 
         for env in ("development", "preview", "production"):
             eas_data["build"][env]["env"] = {
                 **eas_data["build"][env]["env"],
-                **({k: build_env.get(k) for k in direct_export_keys}),
+                **({k: build_env_dict.get(k) for k in direct_export_keys}),
                 "TGCS_APP_VERSION": package_version,
                 "TGCS_ANDROID_VERSION_CODE": str(version + android_version_code_offset),
             }
