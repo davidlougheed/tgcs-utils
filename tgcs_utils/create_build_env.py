@@ -10,6 +10,7 @@ from dataclasses import dataclass
 @command(name="create-build-env")
 @dataclass
 class TGCSCreateBuildEnv:
+    bundle_metadata: pathlib.Path
     eas_json: pathlib.Path
 
     def __call__(self):
@@ -25,7 +26,8 @@ class TGCSCreateBuildEnv:
             "TGCS_IOS_BUNDLE_IDENTIFIER",
         )
 
-        data = json.loads(sys.stdin.read())
+        with open(self.bundle_metadata) as bf:
+            data = json.load(bf)
 
         version = data["release"]["version"]
         version_pattern = os.environ.get("TGCS_VERSION_PATTERN", "{}")
