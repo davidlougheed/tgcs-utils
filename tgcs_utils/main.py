@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from cappa import Subcommands, command, parse
+from cappa import Subcommands, command, invoke
 from dataclasses import dataclass
 
 from .create_build_env import TGCSCreateBuildEnv
@@ -15,7 +15,7 @@ class TGCSUtils:
 
 
 def main():
-    parse(TGCSUtils)
+    invoke(TGCSUtils)
 
 
 if __name__ == "__main__":
