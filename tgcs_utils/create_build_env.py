@@ -5,6 +5,8 @@ import os
 from cappa import command
 from dataclasses import dataclass
 
+__all__ = ["TGCSCreateBuildEnv"]
+
 
 @command(name="create-build-env")
 @dataclass

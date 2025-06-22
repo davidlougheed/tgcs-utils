@@ -6,6 +6,8 @@ import sys
 from cappa import command
 from dataclasses import dataclass
 
+__all__ = ["TGCSRelease"]
+
 
 @command(name="release")
 @dataclass
