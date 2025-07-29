@@ -19,17 +19,26 @@ class TGCSRelease:
     def __call__(self):
         api_url = os.environ["TGCS_SERVER"].rstrip("/")
 
-        tgcs_token = requests.post(
-            os.environ["AUTH0_URL"].rstrip("/") + "/oauth/token",
+        token_url = os.environ["AUTH0_URL"].rstrip("/") + "/oauth/token"
+        client_id = os.environ["AUTH_M2M_CLIENT_ID"]
+        client_secret = os.environ["AUTH_M2M_CLIENT_SECRET"]
+        auth_aud = os.environ["AUTH_AUDIENCE"]
+
+        tgcs_token_req = requests.post(
+            token_url,
             headers={"Content-Type": "application/json"},
             json={
-                "client_id": os.environ["AUTH_M2M_CLIENT_ID"],
-                "client_secret": os.environ["AUTH_M2M_CLIENT_SECRET"],
+                "client_id": client_id,
+                "client_secret": client_secret,
                 "grant_type": "client_credentials",
-                "audience": os.environ["AUTH_AUDIENCE"],
+                "audience": auth_aud,
             },
-        ).json()
+        )
 
+        if not tgcs_token_req.ok:
+            print(f"Error: encountered while obtaining token; {tgcs_token_req.status_code} {tgcs_token_req.content}")
+
+        tgcs_token = tgcs_token_req.json()
         tgcs_headers = {"Authorization": f"Bearer {tgcs_token['access_token']}"}
 
         release_req = requests.get(
