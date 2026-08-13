@@ -1,10 +1,10 @@
 import os
 import pathlib
-import requests
 import sys
-
-from cappa import command
 from dataclasses import dataclass
+
+import requests
+from cappa import command
 
 __all__ = ["TGCSRelease"]
 
@@ -36,7 +36,9 @@ class TGCSRelease:
         )
 
         if not tgcs_token_req.ok:
-            print(f"Error: encountered while obtaining token; {tgcs_token_req.status_code} {tgcs_token_req.content}")
+            print(
+                f"Error: encountered while obtaining token; {tgcs_token_req.status_code} {tgcs_token_req.content}"
+            )
 
         tgcs_token = tgcs_token_req.json()
         tgcs_headers = {"Authorization": f"Bearer {tgcs_token['access_token']}"}
@@ -47,21 +49,21 @@ class TGCSRelease:
 
         if release_req.status_code == 404:
             print("No release found")
-            exit(0)
+            sys.exit(0)
 
         if release_req.status_code != 200:
             print(
                 f"Error: encountered while fetching release; {release_req.content}",
                 file=sys.stderr,
             )
-            exit(1)
+            sys.exit(1)
 
         release_data = release_req.json()
 
         if release_data["published_dt"] is not None:
             # Nothing to do
             print("Nothing to do", file=sys.stderr)
-            exit(0)
+            sys.exit(0)
 
         version = str(release_data["version"])
 
@@ -83,7 +85,7 @@ class TGCSRelease:
                     f"Error: could not set published flag for version {version}; got {r.status_code}: {r.content}",
                     file=sys.stderr,
                 )
-                exit(1)
+                sys.exit(1)
 
             print(f" Request: {put_data}")
             print(f"Response: {r.json()}")

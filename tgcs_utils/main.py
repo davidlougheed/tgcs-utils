@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-from cappa import Subcommands, command, invoke
 from dataclasses import dataclass
+
+from cappa import Subcommands, command, invoke
 
 from .create_build_env import TGCSCreateBuildEnv
 from .extract_version import TGCSExtractVersion

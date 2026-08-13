@@ -1,8 +1,8 @@
 import json
 import sys
+from dataclasses import dataclass
 
 from cappa import command
-from dataclasses import dataclass
 
 __all__ = ["TGCSExtractVersion"]
 
